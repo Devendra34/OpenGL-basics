@@ -10,8 +10,6 @@
 #include "VertexBuffer.h"
 #include "IndexBuffer.h"
 
-#define USE_MODERN_OPENGL 1
-
 
 struct ShaderProgramSource {
     std::string vertexSource;
@@ -160,8 +158,6 @@ int main(void)
             /* Render here */
             glClear(GL_COLOR_BUFFER_BIT);
 
-            #ifdef USE_MODERN_OPENGL
-
             GLCall(glUseProgram(shader));
             GLCall(glUniform4f(location, redChannel, 0.3f, 0.8f, 1.0f));
 
@@ -178,13 +174,7 @@ int main(void)
             }
             redChannel += interval;
 
-            #elif
-            glBegin(GL_TRIANGLES);
-            glVertex2f(-0.5f, -0.5f);
-            glVertex2f(0.0f, 0.5f);
-            glVertex2f(0.5f, -0.5f);
-            glEnd();
-            #endif
+          
             /* Swap front and back buffers */
             glfwSwapBuffers(window);
 
