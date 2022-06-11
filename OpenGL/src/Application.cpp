@@ -109,7 +109,11 @@ int main(void)
     float positions[] = {
         -0.5f, -0.5f,
          0.5f, -0.5f,
-         0.0f,  0.5f
+         0.5f,  0.5f, 
+         
+         0.5f,  0.5f, 
+        -0.5f,  0.5f,
+        -0.5f, -0.5f
     };
 
 
@@ -134,7 +138,7 @@ int main(void)
         glClear(GL_COLOR_BUFFER_BIT);
 
         #ifdef USE_MODERN_OPENGL
-        glDrawArrays(GL_TRIANGLES, 0, 3);
+        glDrawArrays(GL_TRIANGLES, 0, 6);
 
         #elif
         glBegin(GL_TRIANGLES);
