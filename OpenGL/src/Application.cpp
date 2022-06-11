@@ -137,8 +137,13 @@ int main(void)
     unsigned int shader = CreateShader(shaderProgramSource.vertexSource, shaderProgramSource.fragmentSource);
     glUseProgram(shader);
 
-    //glBindBuffer(GL_ARRAY_BUFFER, 0);
+    int location = glGetUniformLocation(shader, "u_Color");
+    glUniform4f(location, 0.8f, 0.3f, 0.8f, 1.0f);
 
+
+    //glBindBuffer(GL_ARRAY_BUFFER, 0);
+    float redChannel = 0.0f;
+    float interval = 0.05f;
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
     {
@@ -146,7 +151,18 @@ int main(void)
         glClear(GL_COLOR_BUFFER_BIT);
 
         #ifdef USE_MODERN_OPENGL
+
+        glUniform4f(location, redChannel, 0.3f, 0.8f, 1.0f);
+
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+
+        if (redChannel > 1.0f) {
+            interval = -0.05f;
+        }
+        else if (redChannel < 0.0f) {
+            interval = 0.05f;
+        }
+        redChannel += interval;
 
         #elif
         glBegin(GL_TRIANGLES);
