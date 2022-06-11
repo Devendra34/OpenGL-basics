@@ -1,0 +1,13 @@
+# Visual Studio files and folder
+.vs/
+**.sln
+**.vcxproj
+**.vcxproj.filters
+**.vcxproj.user
+*.log
+
+# Directories
+Debug
+x64
+OpenGL/Debug
+OpenGL/x64
