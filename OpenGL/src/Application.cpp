@@ -84,6 +84,10 @@ int main(void)
     /* Initialize the library */
     if (!glfwInit())
         return -1;
+
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
    
 
     /* Create a windowed mode window and its OpenGL context */
@@ -118,6 +122,10 @@ int main(void)
         2, 3, 0,
     };
 
+    unsigned int vao;
+    glGenVertexArrays(1, &vao);
+    glBindVertexArray(vao);
+
     unsigned int buffer;
     glGenBuffers(1, &buffer);
     glBindBuffer(GL_ARRAY_BUFFER, buffer);
@@ -141,7 +149,12 @@ int main(void)
     glUniform4f(location, 0.8f, 0.3f, 0.8f, 1.0f);
 
 
-    //glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glUseProgram(0);
+    glBindVertexArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+    //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     float redChannel = 0.0f;
     float interval = 0.05f;
     /* Loop until the user closes the window */
@@ -152,7 +165,12 @@ int main(void)
 
         #ifdef USE_MODERN_OPENGL
 
+        glUseProgram(shader);
         glUniform4f(location, redChannel, 0.3f, 0.8f, 1.0f);
+
+        glBindVertexArray(vao);
+
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
 
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 
