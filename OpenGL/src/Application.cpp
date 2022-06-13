@@ -114,43 +114,28 @@ int main(void)
     }
     {
         float positions[] = {
+           //<-position->|<----colors---->
             -0.5f, -0.5f, 0.2f, 0.3f, 0.8f, 
              0.5f, -0.5f, 0.2f, 0.3f, 0.8f, 
              0.5f,  0.5f, 0.95f, 0.82f, 1.0f,
             -0.5f,  0.5f, 0.95f, 0.82f, 1.0f
         };
 
+        // two triangles to form a square
         unsigned int indices[] = {
-            0, 1, 2,
-            2, 3, 0,
+            0, 1, 2, // 1st triangles indices from above positions
+            2, 3, 0, // 2nd triangles indices from above positions
         };
 
-        //VertexArray va;
-        unsigned int vao;
-        glGenVertexArrays(1, &vao);
-        glBindVertexArray(vao);
+        VertexArray va;
 
-        //VertexBuffer vb(positions, sizeof(positions));
-        //VertexBufferLayout layout;
-        //layout.Push<float>(2);
-        //va.AddBuffer(vb, layout);
+        VertexBuffer vb(positions, sizeof(positions));
+        VertexBufferLayout layout;
+        layout.Push<float>(2);
+        layout.Push<float>(3);
+        va.AddBuffer(vb, layout);
         
-        unsigned int vbo;
-        glGenBuffers(1, &vbo);
-        glBindBuffer(GL_ARRAY_BUFFER, vbo);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(positions), positions, GL_STATIC_DRAW);
-
-        glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 5, 0);
-        glEnableVertexAttribArray(0);
-
-        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 5, (void*)(2 * sizeof(float)));
-        glEnableVertexAttribArray(1);
-
-        unsigned int ibo;
-        glGenBuffers(1, &ibo);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-        //IndexBuffer ib(indices, 6);
+        IndexBuffer ib(indices, 6);
 
         auto shaderProgramSource = ParseShader("res/shaders/Basic.shader");
         unsigned int shader = CreateShader(shaderProgramSource.vertexSource, shaderProgramSource.fragmentSource);
@@ -159,12 +144,11 @@ int main(void)
         //GLCall(int location = glGetUniformLocation(shader, "u_Color"));
         //ASSERT(location != -1);
         //GLCall(glUniform4f(location, 0.2f, 0.3f, 0.8f, 1.0f));
-        // 0.95f, 0.82f, 1.0f, 1.0f
 
-        //va.Unbind();
-        //GLCall(glUseProgram(0));
-        //GLCall(glBindBuffer(GL_ARRAY_BUFFER, 0));
-        //GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0));
+        va.Unbind();
+        GLCall(glUseProgram(0));
+        GLCall(glBindBuffer(GL_ARRAY_BUFFER, 0));
+        GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0));
 
         float redChannel = 0.0f;
         float interval = 0.05f;
@@ -174,21 +158,21 @@ int main(void)
             /* Render here */
             glClear(GL_COLOR_BUFFER_BIT);
 
-            //GLCall(glUseProgram(shader));
+            GLCall(glUseProgram(shader));
             //GLCall(glUniform4f(location, redChannel, 0.3f, 0.8f, 1.0f));
 
-            //va.Bind();
-            //ib.Bind();
+            va.Bind();
+            ib.Bind();
 
             GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
 
-            if (redChannel > 1.0f) {
-                interval = -0.05f;
-            }
-            else if (redChannel < 0.0f) {
-                interval = 0.05f;
-            }
-            redChannel += interval;
+            // if (redChannel > 1.0f) {
+            //     interval = -0.05f;
+            // }
+            // else if (redChannel < 0.0f) {
+            //     interval = 0.05f;
+            // }
+            // redChannel += interval;
 
           
             /* Swap front and back buffers */
