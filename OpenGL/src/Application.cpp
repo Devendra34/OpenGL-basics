@@ -4,9 +4,10 @@
 #include <iostream>
 
 #include "Renderer.h"
-#include "VertexBuffer.h"
-#include "IndexBuffer.h"
 #include "VertexArray.h"
+#include "VertexBuffer.h"
+#include "VertexBufferLayout.h"
+#include "IndexBuffer.h"
 #include "Shader.h"
 
 int main(void)
@@ -71,22 +72,20 @@ int main(void)
         vb.Unbind();
         ib.Unbind();
 
+        Renderer renderer;
+
         float redChannel = 0.0f;
         float interval = 0.05f;
         /* Loop until the user closes the window */
         while (!glfwWindowShouldClose(window))
         {
             /* Render here */
-            glClear(GL_COLOR_BUFFER_BIT);
+            renderer.Clear();
 
             shader.Bind();
             shader.setUniform4f("u_Color", redChannel, 0.3f, 0.8f, 1.0f);
 
-            va.Bind();
-            ib.Bind();
-
-            GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
-
+            renderer.Draw(va, ib, shader);
             if (redChannel > 1.0f) {
                 interval = -0.05f;
             }
