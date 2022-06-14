@@ -56,6 +56,9 @@ int main(void)
             2, 3, 0,
         };
 
+        GLCall(glEnable(GL_BLEND));
+        GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
+
         VertexArray va;
         VertexBuffer vb(positions, sizeof(positions));
         VertexBufferLayout layout;
@@ -68,7 +71,7 @@ int main(void)
         Shader shader("res/shaders/Basic.shader");
         shader.Bind();
         shader.setUniform4f("u_Color", 0.2f, 0.3f, 0.8f, 1.0f);
-        Texture texture("res/textures/opengl_logo.png");
+        Texture texture("res/textures/opengl-1-logo-png-transparent.png");
         texture.Bind();
         shader.setUniform1i("u_texture", 0);
 
