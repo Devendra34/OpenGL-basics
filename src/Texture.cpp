@@ -1,10 +1,11 @@
 #include "Texture.h"
 #include "Renderer.h"
-#include "vendor\stb_image\stb_image.h"
+#include "stb_image/stb_image.h"
+#include "glad/glad.h"
 
-Texture::Texture(const std::string& filePath) : m_FilePath(filePath) {
+Texture::Texture(const char *filePath) : m_FilePath(filePath) {
 	stbi_set_flip_vertically_on_load(1);
-	m_LocalBuffer = stbi_load(filePath.c_str(), &m_Width, &m_Height, &m_BPP, 4);
+	m_LocalBuffer = stbi_load(filePath, &m_Width, &m_Height, &m_BPP, 4);
 
 	GLCall(glGenTextures(1, &m_RendererID));
 	GLCall(glBindTexture(GL_TEXTURE_2D, m_RendererID));
@@ -31,6 +32,6 @@ void Texture::Bind(unsigned int slot) const {
 	GLCall(glBindTexture(GL_TEXTURE_2D, m_RendererID));
 }
 
-void Texture::Unbind() const {
+void Texture::Unbind() {
 	GLCall(glBindTexture(GL_TEXTURE_2D, 0));
 }

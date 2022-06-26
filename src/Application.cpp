@@ -1,4 +1,4 @@
-#include <GL/glew.h>
+#include "glad/glad.h"
 #include <GLFW/glfw3.h>
 
 #include <iostream>
@@ -11,7 +11,7 @@
 #include "Shader.h"
 #include "Texture.h"
 
-int main(void)
+int main()
 {
     GLFWwindow* window;
 
@@ -25,7 +25,7 @@ int main(void)
    
 
     /* Create a windowed mode window and its OpenGL context */
-    window = glfwCreateWindow(640, 480, "Hello World", NULL, NULL);
+    window = glfwCreateWindow(640, 480, "Hello World", nullptr, nullptr);
     if (!window)
     {
         glfwTerminate();
@@ -34,15 +34,13 @@ int main(void)
 
     /* Make the window's context current */
     glfwMakeContextCurrent(window);
+
+    if (!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress)) {
+        std::cout << "Failed to initialize GLAD" << std::endl;
+        return -1;
+    }
     glfwSwapInterval(1);
 
-    GLenum err = glewInit();
-    if (GLEW_OK != err) {
-        std::cout << "Error: " << glewGetErrorString(err) << "\n";
-    }
-    else {
-        std::cout << glGetString(GL_VERSION) << std::endl;
-    }
     {
         float positions[] = {
             -0.5f, -0.5f, 0.0f, 0.0f,
@@ -68,19 +66,20 @@ int main(void)
          
         IndexBuffer ib(indices, 6);
 
-        Shader shader("res/shaders/Basic.shader");
+        std::string shaderSourceFilePath = "../assets/shaders/Basic.shader";
+        Shader shader(shaderSourceFilePath);
         shader.Bind();
         shader.setUniform4f("u_Color", 0.2f, 0.3f, 0.8f, 1.0f);
-        Texture texture("res/textures/opengl-1-logo-png-transparent.png");
+        Texture texture("../assets/textures/opengl-1-logo-png-transparent.png");
         texture.Bind();
         shader.setUniform1i("u_texture", 0);
 
-        va.Unbind();
-        shader.Unbind();
-        vb.Unbind();
-        ib.Unbind();
+        VertexArray::Unbind();
+        Shader::Unbind();
+        VertexBuffer::Unbind();
+        IndexBuffer::Unbind();
 
-        Renderer renderer;
+//        Renderer renderer;
 
         float redChannel = 0.0f;
         float interval = 0.05f;
@@ -88,12 +87,12 @@ int main(void)
         while (!glfwWindowShouldClose(window))
         {
             /* Render here */
-            renderer.Clear();
+            Renderer::Clear();
 
             shader.Bind();
             shader.setUniform4f("u_Color", redChannel, 0.3f, 0.8f, 1.0f);
 
-            renderer.Draw(va, ib, shader);
+            Renderer::Draw(va, ib, shader);
             if (redChannel > 1.0f) {
                 interval = -0.05f;
             }
