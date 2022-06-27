@@ -9,7 +9,7 @@ out vec2 v_texCoord;
 void main() {
    gl_Position = vec4(position, 0.0, 1.0);
    v_texCoord = texCoord;
-};
+}
 
 
 #shader fragment
@@ -25,4 +25,4 @@ uniform sampler2D u_Texture;
 void main() {
 	vec4 textColor = texture(u_Texture, v_texCoord);
 	color = textColor;
-};
+}

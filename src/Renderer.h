@@ -8,7 +8,7 @@
 #define ASSERT(x) if (!(x)) raise(SIGTRAP)
 #define GLCall(x) GLClearError();\
 	x;\
-	GLLogCall(#x, __FILE__, __LINE__)
+	ASSERT(GLLogCall(#x, __FILE__, __LINE__))
 
 void GLClearError();
 
