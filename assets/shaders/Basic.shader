@@ -14,6 +14,8 @@ void main() {
 
 #shader fragment
 #version 330 core
+precision mediump float;
+
 
 layout(location = 0) out vec4 color;
 
@@ -23,6 +25,6 @@ uniform vec4 u_Color;
 uniform sampler2D u_Texture;
 
 void main() {
-	vec4 textColor = texture(u_Texture, v_texCoord);
-	color = textColor;
+	vec4 textColor = texture(u_Texture, v_texCoord.xy);
+	color = textColor * u_Color;
 }
