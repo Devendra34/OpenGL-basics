@@ -15,10 +15,12 @@
 #include <libgen.h>
 #include "ui/WindowHandler.h"
 #include "ui/UILayer.h"
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 void processInput(GLFWwindow *);
 
-void saveImage(char *filepath, GLFWwindow *w);
+void saveImage(const char *filepath, GLFWwindow *w);
 
 void knowAppWorkingDirectory();
 
@@ -48,10 +50,10 @@ int main() {
 
     {
         float positions[] = {
-            -0.5f, -0.5f, 0.0f, 0.0f,
-             0.5f, -0.5f, 1.0f, 0.0f,
-             0.5f,  0.5f, 1.0f, 1.0f,
-            -0.5f,  0.5f, 0.0f, 1.0f,
+            -100, -150, 0.0f, 0.0f,
+            100, -150, 1.0f, 0.0f,
+             100, 150, 1.0f, 1.0f,
+            -100, 150, 0.0f, 1.0f,
         };
 
         unsigned int indices[] = {
@@ -75,7 +77,7 @@ int main() {
         Shader shader(shaderSourceFilePath);
         shader.Bind();
         shader.setUniform4f("u_Color", 0.2f, 0.3f, 0.8f, 1.0f);
-        auto texturePath = appDir + "/assets/textures/opengl-1-logo-png-transparent.png";
+        auto texturePath = appDir + "/assets/textures/sky.jpeg";
         Texture texture(texturePath.c_str());
         texture.Bind();
         shader.setUniform1i("u_texture", 0);
@@ -87,8 +89,7 @@ int main() {
 
 //        Renderer renderer;
 
-        float redChannel = 0.0f;
-        float interval = 0.05f;
+        glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, 0));
         /* Loop until the user closes the window */
         while (!glfwWindowShouldClose(WindowHandler::GetMainWindow())) {
             processInput(WindowHandler::GetMainWindow());
@@ -96,16 +97,14 @@ int main() {
             Renderer::Clear();
 
             shader.Bind();
-            shader.setUniform4f("u_Color", redChannel, 0.3f, 0.8f, 1.0f);
 
+            auto windowWidth = (float) WindowHandler::getWidth();
+            auto windowHeight = (float) WindowHandler::getHeight();
+            glm::mat4 proj = glm::ortho(0.0f, windowWidth, 0.0f, windowHeight,  -1.0f, 1.0f);
+            glm::mat4 model = glm::translate(glm::mat4(1.0f), uiLayer.uiProps.translation);
+            auto mvp = proj * view * model;
+            shader.setUniformMat4f("u_MVP", mvp);
             Renderer::Draw(va, ib, shader);
-            if (redChannel > 1.0f) {
-                interval = -0.05f;
-            } else if (redChannel < 0.0f) {
-                interval = 0.05f;
-            }
-            redChannel += interval;
-
 
             uiLayer.Render();
             /* Swap front and back buffers */
@@ -121,7 +120,7 @@ int main() {
     return 0;
 }
 
-void saveImage(char *filepath, GLFWwindow *w) {
+void saveImage(const char *filepath, GLFWwindow *w) {
     int width, height;
     glfwGetFramebufferSize(w, &width, &height);
     GLsizei nrChannels = 3;
@@ -159,7 +158,7 @@ void processInput(GLFWwindow *window) {
 
     if (glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS && !pressedP) {
         pressedP = true;
-        saveImage("demp.png", window);
+        saveImage("demo.png", window);
         pressedP = false;
     }
 }
