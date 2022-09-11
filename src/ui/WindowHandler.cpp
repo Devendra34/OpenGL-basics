@@ -6,11 +6,14 @@
 
 GLFWwindow* WindowHandler::window = nullptr;
 
+int WindowHandler::mWidth = 640;
+int WindowHandler::mHeight = 480;
+
 bool WindowHandler::InitMainWindow(const char *title) {
     if(!WindowHandler::window) {
 
         /* Create a windowed mode window and its OpenGL context */
-        window = glfwCreateWindow(640, 480, title, nullptr, nullptr);
+        window = glfwCreateWindow(mWidth, mHeight, title, nullptr, nullptr);
         if (!window) {
             glfwTerminate();
             return false;
@@ -18,11 +21,16 @@ bool WindowHandler::InitMainWindow(const char *title) {
 
         /* Make the window's context current */
         glfwMakeContextCurrent(window);
+
+        glfwSetWindowSizeCallback(window, [](GLFWwindow *window, int width, int height) {
+            WindowHandler::mWidth = width;
+            WindowHandler::mHeight = height;
+        });
     }
     return true;
 }
 
-void WindowHandler::ResizeMainWindow(const int width, const int height) {
+void WindowHandler::ResizeMainWindow(const int &width, const int &height) {
     glfwSetWindowSize(window, width, height);
 }
 
@@ -39,4 +47,12 @@ GLFWwindow* WindowHandler::GetMainWindow() {
 
 void WindowHandler::TerminateGlfw() {
     glfwTerminate();
+}
+
+int WindowHandler::getWidth() {
+    return mWidth;
+}
+
+int WindowHandler::getHeight() {
+    return mHeight;
 }

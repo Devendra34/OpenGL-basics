@@ -33,6 +33,7 @@ void UILayer::Render() {
     static bool isOpen = true;
     ImGui::Begin("ImGui", &isOpen);
     ImGui::Checkbox("Show Demo", &showDemo);
+    ImGui::DragFloat3("Translation", &uiProps.translation[0]);
     ImGui::End();
 
     if (showDemo) {
