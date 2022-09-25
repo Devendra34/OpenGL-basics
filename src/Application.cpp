@@ -89,7 +89,7 @@ int main() {
 
 //        Renderer renderer;
 
-        glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, 0));
+//        glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, 0));
         /* Loop until the user closes the window */
         while (!glfwWindowShouldClose(WindowHandler::GetMainWindow())) {
             processInput(WindowHandler::GetMainWindow());
@@ -100,9 +100,10 @@ int main() {
 
             auto windowWidth = (float) WindowHandler::getWidth();
             auto windowHeight = (float) WindowHandler::getHeight();
-            glm::mat4 proj = glm::ortho(0.0f, windowWidth, 0.0f, windowHeight,  -1.0f, 1.0f);
-            glm::mat4 model = glm::translate(glm::mat4(1.0f), uiLayer.uiProps.translation);
-            auto mvp = proj * view * model;
+//            glm::mat4 proj = glm::ortho(0.0f, windowWidth, 0.0f, windowHeight,  -1.0f, 1.0f);
+//            glm::mat4 model = glm::translate(glm::mat4(1.0f), uiLayer.uiProps.translation);
+            const auto &props = uiLayer.uiProps;
+            auto mvp = props.proj() * props.cameraView * props.model();
             shader.setUniformMat4f("u_MVP", mvp);
             Renderer::Draw(va, ib, shader);
 

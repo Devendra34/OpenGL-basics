@@ -37,6 +37,6 @@ add_library(ThirdPartyLibs ${IMGUI_SOURCES} ${IMGUIZMO_SOURCES} ${STB_IMAGE_SOUR
 add_executable(${PROJECT_NAME} ${SOURCES})
 target_link_libraries(${PROJECT_NAME} GLAD glfw glm ThirdPartyLibs)
 
-add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+add_custom_command(TARGET ${PROJECT_NAME} PRE_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_directory
         ${CMAKE_SOURCE_DIR}/assets ${CMAKE_CURRENT_BINARY_DIR}/assets)
